@@ -3,14 +3,10 @@
   "tasks": [
     {
       "label": "Iniciar Re-Conecta (Vite)",
-      "type": "shell",
-      "command": "npm",
+      "type": "process",
+      "command": "node",
       "args": [
-        "--prefix",
-        "ReConecta 1.0",
-        "run",
-        "dev",
-        "--",
+        "${workspaceFolder}/ReConecta 1.0/node_modules/vite/bin/vite.js",
         "--host",
         "127.0.0.1",
         "--port",
@@ -18,7 +14,10 @@
         "--strictPort"
       ],
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/ReConecta 1.0",
+        "env": {
+          "NO_COLOR": "1"
+        }
       },
       "isBackground": true,
       "problemMatcher": {
@@ -32,7 +31,7 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "^> vite",
+          "beginsPattern": "VITE\\s+v",
           "endsPattern": "Local:\\s+http://127\\.0\\.0\\.1:5173/"
         }
       },

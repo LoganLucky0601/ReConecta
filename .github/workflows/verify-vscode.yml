@@ -1,0 +1,51 @@
+name: Verify VS Code launch
+
+on:
+  push:
+    branches: [fix/vscode-node-launch-tested]
+  pull_request:
+    paths:
+      - '.vscode/**'
+      - 'ReConecta 1.0/.vscode/**'
+      - 'tests/vscode/**'
+      - '.github/workflows/verify-vscode.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  launch:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        workspace: ['.', 'ReConecta 1.0']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install application dependencies
+        working-directory: 'ReConecta 1.0'
+        run: npm.cmd ci --no-audit --no-fund
+      - name: Install VS Code test runner
+        run: npm.cmd install --prefix tests/vscode --no-save --package-lock=false @vscode/test-electron@2.5.2
+      - name: Test F5 in VS Code and Chrome twice
+        run: node tests/vscode/run.cjs "${{ matrix.workspace }}"
+      - name: Build for GitHub Pages
+        working-directory: 'ReConecta 1.0'
+        run: npm.cmd run build
+      - name: Verify Pages base path
+        shell: bash
+        run: node -e "const fs=require('fs');const html=fs.readFileSync('ReConecta 1.0/dist/index.html','utf8');if(!html.includes('/ReConecta/assets/'))throw Error('Missing Pages base');console.log('PASS GitHub Pages base path');"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vscode-results-${{ strategy.job-index }}
+          path: |
+            vscode-launch-results.txt
+            .vscode-test/**/logs/**

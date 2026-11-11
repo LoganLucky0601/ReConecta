@@ -3,12 +3,33 @@
   "configurations": [
     {
       "name": "Abrir Re-Conecta (Vite)",
-      "type": "pwa-chrome",
+      "type": "node",
       "request": "launch",
-      "url": "http://127.0.0.1:5173/",
-      "webRoot": "${workspaceFolder}/ReConecta 1.0",
-      "preLaunchTask": "Iniciar Re-Conecta (Vite)",
-      "timeout": 30000
+      "runtimeExecutable": "node",
+      "program": "${workspaceFolder}/ReConecta 1.0/node_modules/vite/bin/vite.js",
+      "cwd": "${workspaceFolder}/ReConecta 1.0",
+      "args": [
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "console": "internalConsole",
+      "outputCapture": "std",
+      "env": {
+        "NO_COLOR": "1"
+      },
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "serverReadyAction": {
+        "pattern": "Local:\\s+(http://127\\.0\\.0\\.1:5173/)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome",
+        "webRoot": "${workspaceFolder}/ReConecta 1.0",
+        "killOnServerStop": true
+      }
     }
   ]
 }
