@@ -5,6 +5,7 @@ const { spawnSync } = require('node:child_process');
 const vscode = require('vscode');
 
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+const normalize = value => process.platform === 'win32' ? path.resolve(value).toLowerCase() : path.resolve(value);
 async function until(probe, description, timeout = 60000) {
   const deadline = Date.now() + timeout;
   let lastError;
@@ -23,13 +24,13 @@ exports.run = async () => {
   try {
     const folder = vscode.workspace.workspaceFolders[0];
     log('Workspace: ' + folder.uri.fsPath);
-    assert.equal(path.resolve(folder.uri.fsPath), path.resolve(process.env.RECONNECTA_WORKSPACE));
+    assert.equal(normalize(folder.uri.fsPath), normalize(process.env.RECONNECTA_WORKSPACE));
 
     // Reproduce the old shell task on Windows with scripts disabled.
     // This policy is scoped to the child process; no machine policy is changed.
     if (process.platform === 'win32') {
       const root = process.env.GITHUB_WORKSPACE;
-      const relative = path.resolve(root) === path.resolve(folder.uri.fsPath) ? '.vscode/tasks.json' : 'ReConecta 1.0/.vscode/tasks.json';
+      const relative = normalize(root) === normalize(folder.uri.fsPath) ? '.vscode/tasks.json' : 'ReConecta 1.0/.vscode/tasks.json';
       const old = JSON.parse(spawnSync('git', ['show', 'd9c40489b55749b6151adf96ae7ab4cab0654e1d:' + relative], { cwd: root, encoding: 'utf8' }).stdout).tasks[0];
       const quote = value => "'" + value.replace(/'/g, "''") + "'";
       const command = '& ' + old.command + ' ' + old.args.map(quote).join(' ');
