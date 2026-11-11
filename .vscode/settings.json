@@ -1,0 +1,9 @@
+{
+  "liveServer.settings.NoBrowser": true,
+  "liveServer.settings.ignoreFiles": [
+    "**/node_modules/**"
+  ],
+  "files.exclude": {
+    "**/node_modules": true
+  }
+}
