@@ -53,7 +53,12 @@ exports.run = async () => {
     // Launch the actual saved configuration through VS Code's debugger API (F5).
     // Repeat after stopping to detect a Vite process left occupying port 5173.
     for (let cycle = 1; cycle <= 2; cycle++) {
-      assert.equal(await vscode.debug.startDebugging(folder, 'Abrir Re-Conecta (Vite)'), true);
+      log('Request F5 cycle ' + cycle);
+      const started = await Promise.race([
+        vscode.debug.startDebugging(folder, 'Abrir Re-Conecta (Vite)'),
+        pause(60000).then(() => { throw new Error('F5 startDebugging did not return'); })
+      ]);
+      assert.equal(started, true);
       const chrome = await until(() => [...sessions.values()].find(session => /chrome/i.test(session.type)), 'automatic Chrome debug session');
       await until(async () => {
         const response = await chrome.customRequest('evaluate', {
