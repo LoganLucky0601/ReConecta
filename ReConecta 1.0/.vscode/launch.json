@@ -13,7 +13,9 @@
         "127.0.0.1",
         "--port",
         "5173",
-        "--strictPort"
+        "--strictPort",
+        "--base",
+        "/"
       ],
       "console": "internalConsole",
       "outputCapture": "std",

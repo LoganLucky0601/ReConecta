@@ -62,12 +62,12 @@ exports.run = async () => {
         pause(60000).then(() => { throw new Error('F5 startDebugging did not return'); })
       ]);
       assert.equal(started, true);
-      const chrome = await until(() => [...sessions.values()].find(session => /chrome/i.test(session.type)), 'automatic Chrome debug session');
+      const chrome = await until(() => [...sessions.values()].find(session => /chrome/i.test(session.type) && session.name.includes('127.0.0.1:5173')), 'automatic Chrome page debug session');
       await until(async () => {
-        const response = await chrome.customRequest('evaluate', {
+        const response = await Promise.race([chrome.customRequest('evaluate', {
           expression: 'location.href === "http://127.0.0.1:5173/" && document.getElementById("root")?.children.length > 0 && document.body.innerText.length > 100 && !document.querySelector("vite-error-overlay")',
           context: 'repl'
-        });
+        }), pause(5000).then(() => { throw new Error('Browser evaluation timed out'); })]);
         return response.result === 'true';
       }, 'React rendering at the exact requested URL');
       const content = await chrome.customRequest('evaluate', { expression: 'document.body.innerText', context: 'repl' });

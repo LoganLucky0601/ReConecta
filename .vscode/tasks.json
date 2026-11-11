@@ -11,7 +11,9 @@
         "127.0.0.1",
         "--port",
         "5173",
-        "--strictPort"
+        "--strictPort",
+        "--base",
+        "/"
       ],
       "options": {
         "cwd": "${workspaceFolder}/ReConecta 1.0",
