@@ -20,7 +20,10 @@ exports.run = async () => {
   const logs = [];
   const sessions = new Map();
   const subscriptions = [];
-  function log(message) { logs.push(message); console.log(message); }
+  function log(message) {
+    logs.push(message); console.log(message);
+    fs.writeFileSync(path.join(process.env.GITHUB_WORKSPACE, 'vscode-launch-results.txt'), logs.join('\n'));
+  }
   try {
     const folder = vscode.workspace.workspaceFolders[0];
     log('Workspace: ' + folder.uri.fsPath);
@@ -78,8 +81,11 @@ exports.run = async () => {
       }, 'port 5173 released');
     }
     log('PASS: actual VS Code debugger, automatic Chrome, React rendering, stop and restart.');
+  } catch (error) {
+    log(error.stack);
+    throw error;
   } finally {
-    for (const session of sessions.values()) await vscode.debug.stopDebugging(session);
+    for (const session of sessions.values()) await Promise.race([vscode.debug.stopDebugging(session), pause(5000)]);
     subscriptions.forEach(subscription => subscription.dispose());
     fs.writeFileSync(path.join(process.env.GITHUB_WORKSPACE, 'vscode-launch-results.txt'), logs.join('\n'));
   }
