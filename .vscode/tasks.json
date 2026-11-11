@@ -4,25 +4,42 @@
     {
       "label": "Iniciar Re-Conecta (Vite)",
       "type": "shell",
-      "command": "npm run dev -- --host 127.0.0.1 --port 5173 --strictPort",
+      "command": "npm",
+      "args": [
+        "--prefix",
+        "ReConecta 1.0",
+        "run",
+        "dev",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
       "options": {
-        "cwd": "${workspaceFolder}/ReConecta 1.0"
+        "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
       "problemMatcher": {
-        "owner": "custom",
+        "owner": "reconecta-vite",
         "pattern": {
-          "regexp": "^$"
+          "regexp": "^(.+):(\\d+):(\\d+):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "^.*vite.*$",
-          "endsPattern": "^.*Local:.*5173.*$"
+          "beginsPattern": "^> vite",
+          "endsPattern": "Local:\\s+http://127\\.0\\.0\\.1:5173/"
         }
       },
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       }
     }
   ]
