@@ -1,0 +1,10 @@
+{
+  "description": "Connect with your community to donate, reuse, or repair electronics, reducing e-waste and promoting a circular economy.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
