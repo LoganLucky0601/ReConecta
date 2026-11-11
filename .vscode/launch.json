@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Abrir Re-Conecta (Vite)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5173/",
+      "webRoot": "${workspaceFolder}/ReConecta 1.0",
+      "preLaunchTask": "Iniciar Re-Conecta (Vite)"
+    }
+  ]
+}
